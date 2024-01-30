@@ -15,6 +15,8 @@ enum custom_keycodes {
   ADJUST,
 };
 
+int caps = 0;
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_QWERTY] = LAYOUT(
@@ -76,12 +78,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+
     case QWERTY:
       if (record->event.pressed) {
          set_single_persistent_default_layer(_QWERTY);
       }
-      return false;
-      break;
+
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
@@ -92,6 +94,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+
     case RAISE:
       if (record->event.pressed) {
         layer_on(_RAISE);
@@ -102,6 +105,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+
     case ADJUST:
       if (record->event.pressed) {
         layer_on(_ADJUST);
@@ -121,50 +125,57 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
 
+bool led_update_kb(led_t led_state) {
+    if (led_state.caps_lock) {
+        rgb_matrix_set_color_all(255, 0, 0);
+    } else {
+        rgb_matrix_set_color_all(0, 0, 0);
+    }
+    return(true);
+}
 
-
+/*
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    for (uint8_t i = led_min; i < led_max; i++) {
+        if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
+            switch(get_highest_layer(layer_state|default_layer_state)) {
+                case _QWERTY:
+                    break;
+                case _LOWER:
+                    RGB_MATRIX_INDICATOR_SET_COLOR(i,0,255,0);
+                    break;
+                case _RAISE:
+                    RGB_MATRIX_INDICATOR_SET_COLOR(i,255,0,0 );
+                    break;
+                default:
+                    RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,0);
+                    break;
+         }
+
+            }
+        }
+    return false;
+}
+*/
+/*
+bool rgb_matrix_indicators_user(void) {
     switch (get_highest_layer(layer_state)) {
         case _QWERTY:
             return false;
             break;
         case _LOWER:
             rgb_matrix_set_color_all(0,0,0);
-            rgb_matrix_set_color_all(255,255,255);
-            // Back row, left half
-            RGB_MATRIX_INDICATOR_SET_COLOR(28, 0, 0, 125);
-            RGB_MATRIX_INDICATOR_SET_COLOR(29, 0, 125, 0);
-            RGB_MATRIX_INDICATOR_SET_COLOR(30, 125, 0, 0);
-
-            // Front row, left half
-            RGB_MATRIX_INDICATOR_SET_COLOR(33, 0, 0, 125);
-            RGB_MATRIX_INDICATOR_SET_COLOR(32, 0, 125, 0);
-            RGB_MATRIX_INDICATOR_SET_COLOR(31, 125, 0, 0);
-
-            // Back row, right half
-            RGB_MATRIX_INDICATOR_SET_COLOR(62, 0, 0, 125);
-            RGB_MATRIX_INDICATOR_SET_COLOR(63, 0, 125, 0);
-            RGB_MATRIX_INDICATOR_SET_COLOR(64, 125, 0, 0);
-
-            // Front row, right half
-            RGB_MATRIX_INDICATOR_SET_COLOR(67, 0, 0, 125);
-            RGB_MATRIX_INDICATOR_SET_COLOR(66, 0, 125, 0);
-            RGB_MATRIX_INDICATOR_SET_COLOR(65, 125, 0, 0);
-
+            //rgb_matrix_set_color_all(255,255,255);
+            //rgb_matrix_set_color(30, 0, 255, 0);
             //this one is top right bottom led
-            //rgb_matrix_set_color(1, 255, 255, 255);
-            /*
+            rgb_matrix_set_color(1, 255, 255, 255);
+            rgb_matrix_set_color(4, 255, 255, 255);
             rgb_matrix_set_color(0, 255, 255, 255);
             //rgb_matrix_set_color(2, 255, 255, 255);
             rgb_matrix_set_color(3, 255, 255, 255);//3
             rgb_matrix_set_color(4, 255, 255, 255);
             rgb_matrix_set_color(5, 255, 255, 255);
             rgb_matrix_set_color(6, 255, 255, 255);
-            */
-
-
-
-
             return true;
             break;
         case _RAISE:
@@ -185,6 +196,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             break;
     }
 }
+*/
 
 /*
 layer_state_t layer_state_set_user(layer_state_t state) {
