@@ -78,7 +78,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-
     case QWERTY:
       if (record->event.pressed) {
          set_single_persistent_default_layer(_QWERTY);
@@ -126,15 +125,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
 bool led_update_kb(led_t led_state) {
+    led_update_ports(led_state);
     if (led_state.caps_lock) {
-        rgb_matrix_set_color_all(255, 0, 0);
-    } else {
+        //this should be all of the indicator leds
+        for(uint8_t i = 0; i < 68; i++){
+            //if need be LED_FLAG_UNDERGLOW can be 4 because thats basically what it is
+            if(HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)){
+                rgb_matrix_set_color_all(255, 0, 0);
+            }
+        }
+    }
+    else {
         rgb_matrix_set_color_all(0, 0, 0);
     }
     return(true);
 }
 
-/*
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     for (uint8_t i = led_min; i < led_max; i++) {
         if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
@@ -156,7 +162,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         }
     return false;
 }
-*/
+
 /*
 bool rgb_matrix_indicators_user(void) {
     switch (get_highest_layer(layer_state)) {
