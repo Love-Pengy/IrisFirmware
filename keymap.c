@@ -127,6 +127,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 bool led_update_kb(led_t led_state) {
     led_update_ports(led_state);
     if (led_state.caps_lock) {
+        caps = 1;
         //this should be all of the indicator leds
         for(uint8_t i = 0; i < 68; i++){
             //if need be LED_FLAG_UNDERGLOW can be 4 because thats basically what it is
@@ -136,6 +137,7 @@ bool led_update_kb(led_t led_state) {
         }
     }
     else {
+        caps = 0;
         rgb_matrix_set_color_all(0, 0, 0);
     }
     return(true);
@@ -146,12 +148,21 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
             switch(get_highest_layer(layer_state|default_layer_state)) {
                 case _QWERTY:
+                    if(!caps){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
+                    }
                     break;
                 case _LOWER:
+                    if(caps){
+                        break;
+                    }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,255,0);
                     break;
                 case _RAISE:
-                    RGB_MATRIX_INDICATOR_SET_COLOR(i,255,0,0 );
+                    if(caps){
+                        break;
+                    }
+                    RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);
                     break;
                 default:
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,0);
