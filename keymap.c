@@ -129,16 +129,17 @@ bool led_update_kb(led_t led_state) {
     if (led_state.caps_lock) {
         caps = 1;
         //this should be all of the indicator leds
+        /*
         for(uint8_t i = 0; i < 68; i++){
             //if need be LED_FLAG_UNDERGLOW can be 4 because thats basically what it is
             if(HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)){
-                rgb_matrix_set_color_all(255, 0, 0);
+                RGB_MATRIX_INDICATOR_SET_COLOR(255, 0, 0);
             }
         }
+        */
     }
     else {
         caps = 0;
-        rgb_matrix_set_color_all(0, 0, 0);
     }
     return(true);
 }
@@ -151,6 +152,9 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                     if(!caps){
                         RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
                     }
+                    else{
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
+                    }
                     break;
                 case _LOWER:
                     if(caps){
@@ -159,6 +163,12 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,255,0);
                     break;
                 case _RAISE:
+                    if(caps){
+                        break;
+                    }
+                    RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);
+                    break;
+                case _ADJUST:
                     if(caps){
                         break;
                     }

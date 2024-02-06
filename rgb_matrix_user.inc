@@ -1,45 +1,35 @@
-//-------------------------------------------------------------------------------------------
-//#ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
-#define RGBLIGHT_LAYERS
-#define RGBLIGHT_LAYERS_RETAIN_VAL
-#    if defined(ENABLE_RGB_MATRIX_SPLASH) || defined(ENABLE_RGB_MATRIX_MULTISPLASH)
+RGB_MATRIX_EFFECT(aro_ace_heatmap)
 
-#        ifdef ENABLE_RGB_MATRIX_SPLASH
-RGB_MATRIX_EFFECT(SPLASH)
-#        endif
+RGB RGB_OFF = [{.r=0, .g=0, .b=0}];
+RGB aroaceFlag = [{.r=239, .g=144, .b=7}, {.r=246, .g=211, .b=23}, {.r=255, .g=255, .b=255}, {.r=69, .g=188, .b=238}, {.r=30, .g=63, .b=83}]
 
-#        ifdef ENABLE_RGB_MATRIX_MULTISPLASH
-RGB_MATRIX_EFFECT(MULTISPLASH)
-#        endif
-
-#        ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
-
-HSV SPLASH_math(HSV hsv, int16_t dx, int16_t dy, uint8_t dist, uint16_t tick) {
-    uint16_t effect = tick - dist;
-    if (effect > 255) effect = 255;
-    hsv.h += effect;
-    hsv.v = qadd8(hsv.v, 255 - effect);
-    return hsv;
+RGB getNextColor(RGB color){
+    int size = sizeof(aroaceFlag)/sizeof(aroaceFlag[0]);
+    for(int i = 0; i < size; i++){
+        if(color == aroaceFlag[i]){
+            if(i == (size - 1)){
+                return(aroaceFlag[i]);
+            }
+            else{
+                return(aroaceFlag[i+1]);
+            }
+        }
+    }
 }
 
-#            ifdef ENABLE_RGB_MATRIX_SPLASH
-bool SPLASH(effect_params_t* params) {
-    return effect_runner_reactive_splash(qsub8(g_last_hit_tracker.count, 1), params, &SPLASH_math);
+RGB getPreviousColor(RGB color){
+    int size = sizeof(aroaceFlag)/sizeof(aroaceFlag[0]);
+    for(int i = 0; i < size; i++){
+        if(color == aroaceFlag[i]){
+            if(i == 0){
+                return(RGB_OFF)
+            }
+            else{
+                return(aroaceFlag[i-1]);
+            }
+        }
+    }
 }
-#            endif
-
-#            ifdef ENABLE_RGB_MATRIX_MULTISPLASH
-bool MULTISPLASH(effect_params_t* params) {
-    return effect_runner_reactive_splash(0, params, &SPLASH_math);
-}
-#            endif
-
-#        endif // RGB_MATRIX_CUSTOM_EFFECT_IMPLS
-#    endif     // !defined(ENABLE_RGB_MATRIX_SPLASH) || !defined(ENABLE_RGB_MATRIX_MULTISPLASH)
-#endif         // RGB_MATRIX_KEYREACTIVE_ENABLED
-
-
-//----------------------------------------------------------------------------------------------------
 
 #if defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && defined(ENABLE_RGB_MATRIX_TYPING_HEATMAP)
 RGB_MATRIX_EFFECT(TYPING_HEATMAP)
@@ -49,7 +39,7 @@ RGB_MATRIX_EFFECT(TYPING_HEATMAP)
 #        endif
 
 #        ifndef RGB_MATRIX_TYPING_HEATMAP_DECREASE_DELAY_MS
-#            define RGB_MATRIX_TYPING_HEATMAP_DECREASE_DELAY_MS 50
+#            define RGB_MATRIX_TYPING_HEATMAP_DECREASE_DELAY_MS 25
 #        endif
 
 #        ifndef RGB_MATRIX_TYPING_HEATMAP_SPREAD
@@ -59,6 +49,27 @@ RGB_MATRIX_EFFECT(TYPING_HEATMAP)
 #        ifndef RGB_MATRIX_TYPING_HEATMAP_AREA_LIMIT
 #            define RGB_MATRIX_TYPING_HEATMAP_AREA_LIMIT 16
 #        endif
+
+//get index of color passed
+int getIndex(RGB value){
+    switch(value){
+        case aroaceFlag[0]:
+            return(0);
+            break;
+        case aroaceFlag[1]:
+            return(1);
+            break;
+        case aroaceFlag[2]:
+            return(2);
+            break;
+        case aroaceFlag[3]:
+            return(3);
+            break;
+        default:
+            return(4);
+            break;
+
+}
 
 void process_rgb_matrix_typing_heatmap(uint8_t row, uint8_t col) {
 #        ifdef RGB_MATRIX_TYPING_HEATMAP_SLIM
@@ -89,8 +100,6 @@ void process_rgb_matrix_typing_heatmap(uint8_t row, uint8_t col) {
             }
         }
     }
-    MULTISPLASH()
-
 #        endif
 }
 
@@ -128,11 +137,18 @@ bool TYPING_HEATMAP(effect_params_t* params) {
                 uint8_t val = g_rgb_frame_buffer[row][col];
                 if (!HAS_ANY_FLAGS(g_led_config.flags[g_led_config.matrix_co[row][col]], params->flags)) continue;
 
-                HSV hsv = {170 - qsub8(val, 85), rgb_matrix_config.hsv.s, scale8((qadd8(170, val) - 170) * 3, rgb_matrix_config.hsv.v)};
-                RGB rgb = rgb_matrix_hsv_to_rgb(hsv);
+                //get index and add one. If greater than 4 then stay at 4`
+                // HSV hsv = {170 - qsub8(val, 85), rgb_matrix_config.hsv.s, scale8((qadd8(170, val) - 170) * 3, rgb_matrix_config.hsv.v)};
+                //RGoB rgb = rgb_matrix_hsv_to_rgb(hsv);
+
+
+                //need to figure out how to get the rgb value of the current led
+                RGB rgb = getNextColor(
+
                 rgb_matrix_set_color(g_led_config.matrix_co[row][col], rgb.r, rgb.g, rgb.b);
 
                 if (decrease_heatmap_values) {
+                    //get index and subtract 1. If less than 0 then turn off led
                     g_rgb_frame_buffer[row][col] = qsub8(val, 1);
                 }
             }
@@ -144,3 +160,4 @@ bool TYPING_HEATMAP(effect_params_t* params) {
 
 #    endif // RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 #endif     // defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && defined(ENABLE_RGB_MATRIX_TYPING_HEATMAP)
+
