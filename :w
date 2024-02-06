@@ -4,7 +4,7 @@ RGB RGB_OFF = [{.r=0, .g=0, .b=0}];
 RGB aroaceFlag = [{.r=239, .g=144, .b=7}, {.r=246, .g=211, .b=23}, {.r=255, .g=255, .b=255}, {.r=69, .g=188, .b=238}, {.r=30, .g=63, .b=83}]
 
 
-RGB get_rgb_color(int index){
+RGB get_rgb_colo(int index){
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
 
     RGB color;
@@ -17,6 +17,8 @@ RGB get_rgb_color(int index){
         color.b = g_pwm_buffer[led.driver][led.b];
     }
     return(color);
+
+
 
 }
 
@@ -160,16 +162,18 @@ bool TYPING_HEATMAP(effect_params_t* params) {
                 RGB rgb = rgb_matrix_hsv_to_rgb(hsv);
                 */
                 count++;
-                RGB currentColor = get_rgb_color(g_led_config.matrix_co[row][col]);
-                //assuming this is the index value for the current pin
-                RGB rgb = getNextColor(currentColor);
+                //assuming this is the current value
+                HSV hsv = {170 - qsub8(val, 85), rgb_matrix_config.hsv.s, scale8((qadd8(170, val) - 170) * 3, rgb_matrix_config.hsv.v)};
+                RGB rgb = rgb_matrix_hsv_to_rgb(hsv);
+                RGB rgb = getNextColor(rgb);
+                rgb_matrix_set_color(g_led_config.matrix_co[row][col], rgb.r, rgb.g, rgb.b);
 
                 if (decrease_heatmap_values) {
                     //get index and subtract 1. If less than 0 then turn off led
-                    RGB rgb = getPreviousColor(currentColor);
-                    //g_rgb_frame_buffer[row][col] = qsub8(val, 1);
+                    RGB rgb = getPreviousColor(rgb);
+                    RGB rgb = getPreviousColor(rgb);
+                    g_rgb_frame_buffer[row][col] = qsub8(val, 1);
                 }
-                rgb_matrix_set_color(g_led_config.matrix_co[row][col], rgb.r, rgb.g, rgb.b);
             }
         }
     }
