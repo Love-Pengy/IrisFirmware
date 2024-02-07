@@ -157,7 +157,8 @@
             "multisplash": false,
             "solid_splash": false,
             "solid_multisplash": false,
-            "none": true
+            "none": true,
+            "aro_ace_heatmap": true
         },
         "driver": "ws2812",
         "split_count": [34, 34],

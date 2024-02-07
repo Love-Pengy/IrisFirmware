@@ -8,6 +8,10 @@
 #define _RAISE 2
 #define _ADJUST 3
 
+
+//dont know if these are the actual pins but we boutta find out LOL
+int underglowArr = [65, 66, 67, 64, 63, 62, 33, 32, 31, 29, 30, 28];
+
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
@@ -128,6 +132,14 @@ bool led_update_kb(led_t led_state) {
     led_update_ports(led_state);
     if (led_state.caps_lock) {
         caps = 1;
+
+        //test this out see if this works for setting both sides to red
+        /*
+        for(int i = 0; i < 10; i++){
+            RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
+        }
+        */
+
         //this should be all of the indicator leds
         /*
         for(uint8_t i = 0; i < 68; i++){
