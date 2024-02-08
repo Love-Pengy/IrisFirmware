@@ -10,7 +10,7 @@
 
 
 //dont know if these are the actual pins but we boutta find out LOL
-int underglowArr = [65, 66, 67, 64, 63, 62, 33, 32, 31, 29, 30, 28];
+int underglowArr[] = {65, 66, 67, 64, 63, 62, 33, 32, 31, 29, 30, 28};
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,

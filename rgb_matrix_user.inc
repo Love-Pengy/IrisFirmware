@@ -1,8 +1,40 @@
 RGB_MATRIX_EFFECT(aro_ace_heatmap)
 
-RGB RGB_OFF = [{.r=0, .g=0, .b=0}];
-RGB aroaceFlag = [{.r=239, .g=144, .b=7}, {.r=246, .g=211, .b=23}, {.r=255, .g=255, .b=255}, {.r=69, .g=188, .b=238}, {.r=30, .g=63, .b=83}]
+#if defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && defined(ENABLE_RGB_MATRIX_TYPING_HEATMAP)
+RGB_MATRIX_EFFECT(TYPING_HEATMAP)
+#    ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
+#        ifndef RGB_MATRIX_TYPING_HEATMAP_INCREASE_STEP
+#            define RGB_MATRIX_TYPING_HEATMAP_INCREASE_STEP 32
+#        endif
 
+#        ifndef RGB_MATRIX_TYPING_HEATMAP_DECREASE_DELAY_MS
+#            define RGB_MATRIX_TYPING_HEATMAP_DECREASE_DELAY_MS 25
+#        endif
+
+#        ifndef RGB_MATRIX_TYPING_HEATMAP_SPREAD
+#            define RGB_MATRIX_TYPING_HEATMAP_SPREAD 40
+#        endif
+
+#        ifndef RGB_MATRIX_TYPING_HEATMAP_AREA_LIMIT
+#            define RGB_MATRIX_TYPING_HEATMAP_AREA_LIMIT 16
+#        endif
+
+RGB test;
+test->r = 0;
+RGB ledsOff[] = {}
+RGB *aroaceFlag = [{.r=239, .g=144, .b=7}, {.r=246, .g=211, .b=23}, {.r=255, .g=255, .b=255}, {.r=69, .g=188, .b=238}, {.r=30, .g=63, .b=83}]
+
+int compareRGB(RGB color1, RGB color2){
+    if(color1.r == color2.r){
+        if(color1.g == color2.g){
+            if(color1.b == color2.b){
+                return(1);
+            }
+        }
+    }
+    return(0);
+
+}
 
 RGB get_rgb_color(int index){
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
@@ -23,7 +55,7 @@ RGB get_rgb_color(int index){
 RGB getNextColor(RGB color){
     int size = sizeof(aroaceFlag)/sizeof(aroaceFlag[0]);
     for(int i = 0; i < size; i++){
-        if(color == aroaceFlag[i]){
+        if(compareRGB(color, aroaceFlag[i])){
             if(i == (size - 1)){
                 return(aroaceFlag[i]);
             }
@@ -37,9 +69,9 @@ RGB getNextColor(RGB color){
 RGB getPreviousColor(RGB color){
     int size = sizeof(aroaceFlag)/sizeof(aroaceFlag[0]);
     for(int i = 0; i < size; i++){
-        if(color == aroaceFlag[i]){
+        if(compareRGB(color, aroaceFlag[i])){
             if(i == 0){
-                return(RGB_OFF)
+                return(ledsOff);
             }
             else{
                 return(aroaceFlag[i-1]);
@@ -47,25 +79,6 @@ RGB getPreviousColor(RGB color){
         }
     }
 }
-
-#if defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && defined(ENABLE_RGB_MATRIX_TYPING_HEATMAP)
-RGB_MATRIX_EFFECT(TYPING_HEATMAP)
-#    ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
-#        ifndef RGB_MATRIX_TYPING_HEATMAP_INCREASE_STEP
-#            define RGB_MATRIX_TYPING_HEATMAP_INCREASE_STEP 32
-#        endif
-
-#        ifndef RGB_MATRIX_TYPING_HEATMAP_DECREASE_DELAY_MS
-#            define RGB_MATRIX_TYPING_HEATMAP_DECREASE_DELAY_MS 25
-#        endif
-
-#        ifndef RGB_MATRIX_TYPING_HEATMAP_SPREAD
-#            define RGB_MATRIX_TYPING_HEATMAP_SPREAD 40
-#        endif
-
-#        ifndef RGB_MATRIX_TYPING_HEATMAP_AREA_LIMIT
-#            define RGB_MATRIX_TYPING_HEATMAP_AREA_LIMIT 16
-#        endif
 
 //get index of color passed
 int getIndex(RGB value){
