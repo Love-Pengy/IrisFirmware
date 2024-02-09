@@ -81,6 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
   switch (keycode) {
     case QWERTY:
       if (record->event.pressed) {
@@ -165,7 +166,10 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                         RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
                     }
                     else{
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
+                        for(int i = 0; i < 11; i++){
+                            rgb_matrix_set_color(underglowArr[i], 255, 0, 0);
+                        }
+                        break;
                     }
                     break;
                 case _LOWER:
@@ -176,12 +180,18 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                     break;
                 case _RAISE:
                     if(caps){
+                        for(int i = 0; i < 11; i++){
+                            rgb_matrix_set_color(underglowArr[i], 255, 0, 0);
+                        }
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);
                     break;
                 case _ADJUST:
                     if(caps){
+                        for(int i = 0; i < 11; i++){
+                            rgb_matrix_set_color(underglowArr[i], 255, 0, 0);
+                        }
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);
