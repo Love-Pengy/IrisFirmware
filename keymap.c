@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
+#include "transactions.h"
 
 #define _QWERTY 0
 #define _LOWER 1
@@ -10,7 +11,7 @@
 
 
 //dont know if these are the actual pins but we boutta find out LOL
-int underglowArr[] = {65, 66, 67, 64, 63, 62, 33, 32, 31, 29, 30, 28};
+//int underglowArr[] = {65, 66, 67, 64, 63, 62, 33, 32, 31, 29, 30, 28};
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
@@ -80,8 +81,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
+bool capsWordStatus = false;
+
+
+void update_caps(uint8_t in_buflen, const void* in_data, uint8_t out_buflen, void* out_data) {
+    capsWordStatus = *((const uint8_t*)in_data);
+}
+
+void keyboard_post_init_user(void){
+    transaction_register_rpc(CAPS_WORD_SYNC, update_caps);
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case QWERTY:
       if (record->event.pressed) {
@@ -122,76 +134,77 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+void housekeeping_task_user(void){
+    if(is_keyboard_master()){
+        static uint32_t last_sync = 0;
+        if(timer_elapsed32(last_sync) > 100){
+            bool active_caps = is_caps_word_on();
+            transaction_rpc_send(CAPS_WORD_SYNC, sizeof(active_caps), &active_caps);
+        }
+    }
+}
+
 // caps lock = red
 // first layer = porple
 // second layer = pink
 // third layer = white
 
 
-
+/*
 bool led_update_kb(led_t led_state) {
     led_update_ports(led_state);
     if (led_state.caps_lock) {
         caps = 1;
 
         //test this out see if this works for setting both sides to red
-        /*
         for(int i = 0; i < 10; i++){
             RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
         }
-        */
 
         //this should be all of the indicator leds
-        /*
         for(uint8_t i = 0; i < 68; i++){
             //if need be LED_FLAG_UNDERGLOW can be 4 because thats basically what it is
             if(HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)){
                 RGB_MATRIX_INDICATOR_SET_COLOR(255, 0, 0);
             }
         }
-        */
     }
     else {
         caps = 0;
     }
     return(true);
 }
+*/
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    led_t led_state = host_keyboard_led_state();
     for (uint8_t i = led_min; i < led_max; i++) {
         if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
             switch(get_highest_layer(layer_state|default_layer_state)) {
                 case _QWERTY:
-                    if(!caps){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
-                    }
-                    else{
-                        for(int i = 0; i < 11; i++){
-                            rgb_matrix_set_color(underglowArr[i], 255, 0, 0);
-                        }
+                    if(led_state.caps_lock){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
                         break;
                     }
+                    RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
                     break;
                 case _LOWER:
-                    if(caps){
+                    if(led_state.caps_lock){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,255,0);
                     break;
                 case _RAISE:
-                    if(caps){
-                        for(int i = 0; i < 11; i++){
-                            rgb_matrix_set_color(underglowArr[i], 255, 0, 0);
-                        }
+                    if(led_state.caps_lock){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);
                     break;
                 case _ADJUST:
-                    if(caps){
-                        for(int i = 0; i < 11; i++){
-                            rgb_matrix_set_color(underglowArr[i], 255, 0, 0);
-                        }
+                    if(led_state.caps_lock){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);

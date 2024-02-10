@@ -157,7 +157,6 @@
             "multisplash": false,
             "solid_splash": false,
             "solid_multisplash": false,
-            "none": true,
             "aro_ace_heatmap": true
         },
         "driver": "ws2812",
