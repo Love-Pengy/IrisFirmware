@@ -85,10 +85,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    /*
-    case RGB_MOD:
-        rgb_matrix_mode(RGB_MATRIX_CUSTOM_aro_ace_splash);
-    */
 
     case QWERTY:
       if (record->event.pressed) {
@@ -135,31 +131,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // third layer = white
 
 
-/*
-bool led_update_kb(led_t led_state) {
-    led_update_ports(led_state);
-    if (led_state.caps_lock) {
-        caps = 1;
-
-        //test this out see if this works for setting both sides to red
-        for(int i = 0; i < 10; i++){
-            RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
-        }
-
-        //this should be all of the indicator leds
-        for(uint8_t i = 0; i < 68; i++){
-            //if need be LED_FLAG_UNDERGLOW can be 4 because thats basically what it is
-            if(HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)){
-                RGB_MATRIX_INDICATOR_SET_COLOR(255, 0, 0);
-            }
-        }
-    }
-    else {
-        caps = 0;
-    }
-    return(true);
-}
-*/
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     for (uint8_t i = led_min; i < led_max; i++) {
@@ -207,64 +178,3 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     return false;
 }
 
-/*
-bool rgb_matrix_indicators_user(void) {
-    switch (get_highest_layer(layer_state)) {
-        case _QWERTY:
-            return false;
-            break;
-        case _LOWER:
-            rgb_matrix_set_color_all(0,0,0);
-            //rgb_matrix_set_color_all(255,255,255);
-            //rgb_matrix_set_color(30, 0, 255, 0);
-            //this one is top right bottom led
-            rgb_matrix_set_color(1, 255, 255, 255);
-            rgb_matrix_set_color(4, 255, 255, 255);
-            rgb_matrix_set_color(0, 255, 255, 255);
-            //rgb_matrix_set_color(2, 255, 255, 255);
-            rgb_matrix_set_color(3, 255, 255, 255);//3
-            rgb_matrix_set_color(4, 255, 255, 255);
-            rgb_matrix_set_color(5, 255, 255, 255);
-            rgb_matrix_set_color(6, 255, 255, 255);
-            return true;
-            break;
-        case _RAISE:
-            rgb_matrix_set_color_all(0,0,0);
-            rgb_matrix_set_color(6, 75, 255, 75);
-            rgb_matrix_set_color(7, 75, 255, 75);
-            return true;
-            break;
-        case _ADJUST: //GMAIL Layer
-            rgb_matrix_set_color_all(0, 0, 0);
-            rgb_matrix_set_color(6, 0, 204, 0);
-            rgb_matrix_set_color(7, 0, 204, 0);
-            rgb_matrix_set_color(8, 0, 204, 0);
-            return true;
-            break;
-        default:
-            return false;
-            break;
-    }
-}
-*/
-
-/*
-layer_state_t layer_state_set_user(layer_state_t state) {
-    state = get_highest_layer(state);
-    switch (state) {
-        case _RAISE:
-            rgblight_sethsv(HSV_BLUE);
-            break;
-        case _LOWER:
-            rgblight_sethsv(HSV_RED);
-            break;
-        case _ADJUST:
-            rgblight_sethsv(HSV_WHITE);
-            break;
-        case _QWERTY:
-            break;
-    }
-    return state;
-}
-
-*/

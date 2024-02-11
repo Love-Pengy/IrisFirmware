@@ -3,7 +3,8 @@
 
 #pragma once
 
-#define SPLIT_TRANSACTION_IDS_USER CAPS_WORD_SYNC
+
+//dont touch
 #define SPLIT_HAND_PIN GP4
 #define USB_VBUS_PIN GP8
 #define SERIAL_USART_FULL_DUPLEX
