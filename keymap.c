@@ -82,23 +82,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
-bool capsWordStatus = false;
-
-
-void update_caps(uint8_t in_buflen, const void* in_data, uint8_t out_buflen, void* out_data) {
-    capsWordStatus = *((const uint8_t*)in_data);
-}
-
-void keyboard_post_init_user(void){
-    debug_enable = true;
-    debug_matrix = true;
-    transaction_register_rpc(CAPS_WORD_SYNC, update_caps);
-}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+    /*
     case RGB_MOD:
         rgb_matrix_mode(RGB_MATRIX_CUSTOM_aro_ace_splash);
+    */
 
     case QWERTY:
       if (record->event.pressed) {
@@ -139,16 +129,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-void housekeeping_task_user(void){
-    if(is_keyboard_master()){
-        static uint32_t last_sync = 0;
-        if(timer_elapsed32(last_sync) > 100){
-            bool active_caps = is_caps_word_on();
-            transaction_rpc_send(CAPS_WORD_SYNC, sizeof(active_caps), &active_caps);
-        }
-    }
-}
-
 // caps lock = red
 // first layer = porple
 // second layer = pink
@@ -186,31 +166,36 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
             switch(get_highest_layer(layer_state|default_layer_state)) {
                 case _QWERTY:
-                    if(capsWordStatus){
+                    if(host_keyboard_led_state().caps_lock){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
                     break;
                 case _LOWER:
-                    if(capsWordStatus){
+                    if(host_keyboard_led_state().caps_lock){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,255,0);
                     break;
                 case _RAISE:
-                    if(capsWordStatus){
+                    if(host_keyboard_led_state().caps_lock){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);
                     break;
                 case _ADJUST:
-                    if(capsWordStatus){
+                    if(host_keyboard_led_state().caps_lock){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);
                     break;
                 default:
-                    if(capsWordStatus){
+                    if(host_keyboard_led_state().caps_lock){
+                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,0);
