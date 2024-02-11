@@ -1,4 +1,27 @@
 
+
+
+
+//const RGB darkOrange = {.r = 239, .g = 144, .b = 7};
+//const HSV darkOrange = {.h = 35, .s = 97.1, .v = 93.7};
+//const RGB lightOrange = {.r = 246, .g = 211, .b = 23};
+//const HSV lightOrange = {.h = 51, .s = 90.7, .v = 96.5};
+//const RGB white = {.r = 255, .g = 255, .b = 255};
+//const HSV white = {.h = 51, .s = 0, .v = 100};
+//const RGB lightBlue = {.r = 69, .g = 188, .b = 238};
+//const HSV lightBlue = {.h = 198, .s = 71, .v = 93.3};
+//const RGB darkBlue = {.r = 30, .g = 63, .b = 83};
+//const HSV darkBlue = {.h = 203, .s = 63.9, .v = 32.5};
+//RGB aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
+
+
+//HSV aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
+#define DARKORANGE 0xef9007
+#define LIGHTORANGE 0xf6d317
+#define WHITE 0xffffff
+#define lightBlue 0x45bcee
+#define darkBlue 0x1e3f54
+
 RGB_MATRIX_EFFECT(aro_ace_splash)
 
 #ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
@@ -9,32 +32,11 @@ RGB_MATRIX_EFFECT(aro_ace_splash)
         #endif
 
         #ifndef SOLID_REACTIVE_SPLASH_WAVE_WIDTH
-            #define SOLID_REACTIVE_SPLASH_WAVE_WIDTH 45  // ~8 keys wide (including fade/dropoff)
+            #define SOLID_REACTIVE_SPLASH_WAVE_WIDTH 75  // ~8 keys wide (including fade/dropoff)
         #endif
         // ## default customizable values ##
 
         #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
-        const RGB darkOrange = {.r = 239, .g = 144, .b = 7};
-        //const HSV darkOrange = {.h = 35, .s = 97.1, .v = 93.7};
-        const RGB lightOrange = {.r = 246, .g = 211, .b = 23};
-        //const HSV lightOrange = {.h = 51, .s = 90.7, .v = 96.5};
-        const RGB white = {.r = 255, .g = 255, .b = 255};
-        //const HSV white = {.h = 51, .s = 0, .v = 100};
-        const RGB lightBlue = {.r = 69, .g = 188, .b = 238};
-        //const HSV lightBlue = {.h = 198, .s = 71, .v = 93.3};
-        const RGB darkBlue = {.r = 30, .g = 63, .b = 83};
-        //const HSV darkBlue = {.h = 203, .s = 63.9, .v = 32.5};
-        RGB aroaceFlag[5] = {darkOrange, lightOrange,white, lightBlue, darkBlue};
-
-
-        //HSV aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
-        /*
-        #define DARKORANGE 0xef9007
-        #define LIGHTORANGE 0xf6d317
-        #define WHITE 0xffffff
-        #define lightBlue 0x45bcee
-        #define darkBlue 0x1e3f54
-        */
 
             #define _MAX(a, b) ((a) > (b) ? (a) : (b))
             #define _MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -43,38 +45,32 @@ RGB_MATRIX_EFFECT(aro_ace_splash)
             #define _RGBHEX_R(rgb) ((rgb) >> 16)
             #define _RGBHEX_G(rgb) (((rgb) >> 8) & 0xFF)
             #define _RGBHEX_B(rgb) ((rgb) & 0xFF)
-            int colorIndex = 0;
-            int counter = 0;
-            int timerSplit = 13107; // 16 bit max val divided by 5
 
-            RGB getNextRGB(uint16_t timeVal){
-                if(timeVal < timerSplit){
-                    return(aroaceFlag[0]);
-                }
-                else if((timeVal > timerSplit) && (timeVal < (timerSplit * 2)){
-                    return(aroaceFlag[1]);
-                }
-            }
             bool aro_ace_splash(effect_params_t* params) {
-                uint16_t timeElapsed = timer_read();
-                RGB_MATRIX_USE_LIMITS(led_min, led_max);
-                RGB base_rgb = {.r = 0, .g = 0, .b = 0};
-                //RGB base_rgb = rgb_matrix_hsv_to_rgb(rgb_matrix_config.hsv);
 
-                RGB wave_rgb = getNextRGB();
+                int index = rand()%6;
+                RGB_MATRIX_USE_LIMITS(led_min, led_max);
+
+                RGB base_rgb = rgb_matrix_hsv_to_rgb(rgb_matrix_config.hsv);
+                RGB wave_rgb = {};
+                if(index == 0){
+                    wave_rgb = {.r = _RGBHEX_R(DARKORANGE),.g = _RGBHEX_G(DARKORANGE),.b = _RGBHEX_B(DARKORANGE)};
+                }
+                else{
+                    wave_rgb = {
+                        .r = _RGBHEX_R(DARKORANGE),
+                        .g = _RGBHEX_G(DARKORANGE),
+                        .b = _RGBHEX_B(DARKORANGE)
+                    };
+                }
+
+
 
                 for (uint8_t i = led_min; i < led_max; i++) {
                     RGB_MATRIX_TEST_LED_FLAGS();
                     uint8_t A          = 0;
                     uint8_t hit_count  = g_last_hit_tracker.count;
-                    if(hit_count == (counter*10)){
-                    }
-                    else{
-                        colorIndex = rand()%6;
-                    }
-                    counter = hit_count;
-
-                    uint8_t wave_speed = 40;
+                    uint8_t wave_speed = rgb_matrix_config.speed;
 
                     /* result = (A * wave_color) + ((1 - A) * base_color) */
                     for (uint8_t j = 0; j < hit_count; j++) {
@@ -104,7 +100,6 @@ RGB_MATRIX_EFFECT(aro_ace_splash)
                         .g = scale8(wave_rgb.g, A) + scale8(base_rgb.g, 0xFF - A),
                         .b = scale8(wave_rgb.b, A) + scale8(base_rgb.b, 0xFF - A),
                     };
-
                     rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
                 }
 

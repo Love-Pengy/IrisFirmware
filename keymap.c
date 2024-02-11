@@ -90,11 +90,16 @@ void update_caps(uint8_t in_buflen, const void* in_data, uint8_t out_buflen, voi
 }
 
 void keyboard_post_init_user(void){
+    debug_enable = true;
+    debug_matrix = true;
     transaction_register_rpc(CAPS_WORD_SYNC, update_caps);
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+    case RGB_MOD:
+        rgb_matrix_mode(RGB_MATRIX_CUSTOM_aro_ace_splash);
+
     case QWERTY:
       if (record->event.pressed) {
          set_single_persistent_default_layer(_QWERTY);
@@ -177,39 +182,37 @@ bool led_update_kb(led_t led_state) {
 */
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    led_t led_state = host_keyboard_led_state();
     for (uint8_t i = led_min; i < led_max; i++) {
         if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
             switch(get_highest_layer(layer_state|default_layer_state)) {
                 case _QWERTY:
-                    if(led_state.caps_lock){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
+                    if(capsWordStatus){
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
                     break;
                 case _LOWER:
-                    if(led_state.caps_lock){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
+                    if(capsWordStatus){
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,255,0);
                     break;
                 case _RAISE:
-                    if(led_state.caps_lock){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
+                    if(capsWordStatus){
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);
                     break;
                 case _ADJUST:
-                    if(led_state.caps_lock){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
+                    if(capsWordStatus){
                         break;
                     }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,255);
                     break;
                 default:
+                    if(capsWordStatus){
+                        break;
+                    }
                     RGB_MATRIX_INDICATOR_SET_COLOR(i,0,0,0);
                     break;
          }
