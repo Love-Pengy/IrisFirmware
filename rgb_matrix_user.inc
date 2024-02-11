@@ -24,8 +24,9 @@ RGB_MATRIX_EFFECT(aro_ace_splash)
         //const HSV lightBlue = {.h = 198, .s = 71, .v = 93.3};
         const RGB darkBlue = {.r = 30, .g = 63, .b = 83};
         //const HSV darkBlue = {.h = 203, .s = 63.9, .v = 32.5};
-        RGB aroaceFlag[5] = {darkOrange, lightOrange,white, lightBlue, darkBlue};
+        RGB aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
 
+        const RGB ledsOff = {.r = 0, .g = 0, .b = 0};
 
         //HSV aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
         /*
@@ -43,25 +44,56 @@ RGB_MATRIX_EFFECT(aro_ace_splash)
             #define _RGBHEX_R(rgb) ((rgb) >> 16)
             #define _RGBHEX_G(rgb) (((rgb) >> 8) & 0xFF)
             #define _RGBHEX_B(rgb) ((rgb) & 0xFF)
+            #define TIMERSCALER 2
             int colorIndex = 0;
             int counter = 0;
-            int timerSplit = 13107; // 16 bit max val divided by 5
+            int timerSplit = 10000; // 16 bit max val divided by 5
 
             RGB getNextRGB(uint16_t timeVal){
-                if(timeVal < timerSplit){
+                if((timeVal % timerSplit) < 2000){
                     return(aroaceFlag[0]);
                 }
-                else if((timeVal > timerSplit) && (timeVal < (timerSplit * 2)){
+                else if(((timeVal % timerSplit) > 2000) && ((timeVal % timerSplit) < 4000)){
                     return(aroaceFlag[1]);
                 }
+                else if(((timeVal % timerSplit) > 4000) && ((timeVal % timerSplit) < 6000)){
+                    return(aroaceFlag[2]);
+                }
+                else if(((timeVal % timerSplit) > 6000) && ((timeVal % timerSplit < 8000))){
+                    return(aroaceFlag[3]);
+                }
+                else if((timeVal % timerSplit) > 8000){
+                    return(aroaceFlag[4]);
+                }
+                return(ledsOff); //so it stops whining
             }
+
+/*
+            RGB getNextRGB(uint16_t timeVal){
+                if(timeVal < (timerSplit/TIMERSCALER)){
+                    return(aroaceFlag[0]);
+                }
+                else if((timeVal > (timerSplit/TIMERSCALER)) && (timeVal < ((timerSplit * 2)/TIMERSCALER))){
+                }
+                else if(timeVal > ((timerSplit * 2)/TIMERSCALER) && (timeVal < ((timerSplit * 3)/TIMERSCALER))){
+                    return(aroaceFlag[2]);
+                }
+                else if((timeVal > ((timerSplit * 3)/TIMERSCALER)) && (timeVal < ((timerSplit * 4)/TIMERSCALER))){
+                    return(aroaceFlag[3]);
+                }
+                else if(((timeVal > (timerSplit * 4))/TIMERSCALER) && (timeVal < (timerSplit * 5)/TIMERSCALER)){
+                    return(aroaceFlag[4]);
+                }
+                return(aroaceFlag[0]); //so it stops whining
+            }
+*/
             bool aro_ace_splash(effect_params_t* params) {
                 uint16_t timeElapsed = timer_read();
                 RGB_MATRIX_USE_LIMITS(led_min, led_max);
                 RGB base_rgb = {.r = 0, .g = 0, .b = 0};
                 //RGB base_rgb = rgb_matrix_hsv_to_rgb(rgb_matrix_config.hsv);
 
-                RGB wave_rgb = getNextRGB();
+                RGB wave_rgb = getNextRGB(timeElapsed);
 
                 for (uint8_t i = led_min; i < led_max; i++) {
                     RGB_MATRIX_TEST_LED_FLAGS();
