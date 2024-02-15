@@ -1,5 +1,6 @@
 
 RGB_MATRIX_EFFECT(aro_ace_splash)
+RGB_MATRIX_EFFECT(no_anim)
 
 #ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
     #ifdef ENABLE_RGB_MATRIX_SOLID_REACTIVE_SPLASH
@@ -10,6 +11,14 @@ RGB_MATRIX_EFFECT(aro_ace_splash)
         // ## default customizable values ##
 
         #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
+        static bool no_anim(effect_params_t* params) {
+            RGB_MATRIX_USE_LIMITS(led_min, led_max);
+            for (uint8_t i = led_min; i < led_max; i++) {
+                rgb_matrix_set_color(i, RGB_OFF);
+            }
+            return rgb_matrix_check_finished_leds(led_max);
+        }
+
         const RGB darkOrange = {.r = 239, .g = 144, .b = 7};
         //const HSV darkOrange = {.h = 35, .s = 97.1, .v = 93.7};
         const RGB lightOrange = {.r = 246, .g = 211, .b = 23};

@@ -89,6 +89,7 @@
 #undef RGB_MATRIX_RIVERFLOW            // Modification to breathing animation, offset's animation depending on key location to simulate a river flowing
 #undef RGB_MATRIX_EFFECT_MAX
 #define RGB_MATRIX_ARO_ACE_SPLASH
+#define RGB_MATRIX_NO_ANIM
 
 //disable effects
 #undef RGBLIGHT_ANIMATIONS
