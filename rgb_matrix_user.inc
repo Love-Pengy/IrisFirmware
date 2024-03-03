@@ -11,6 +11,7 @@ RGB_MATRIX_EFFECT(no_anim)
         // ## default customizable values ##
 
         #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
+
         static bool no_anim(effect_params_t* params) {
             RGB_MATRIX_USE_LIMITS(led_min, led_max);
             for (uint8_t i = led_min; i < led_max; i++) {
@@ -19,6 +20,7 @@ RGB_MATRIX_EFFECT(no_anim)
             return rgb_matrix_check_finished_leds(led_max);
         }
 
+        //original set
         const RGB darkOrange = {.r = 239, .g = 144, .b = 7};
         //const HSV darkOrange = {.h = 35, .s = 97.1, .v = 93.7};
         const RGB lightOrange = {.r = 246, .g = 211, .b = 23};
@@ -31,9 +33,11 @@ RGB_MATRIX_EFFECT(no_anim)
         //const HSV darkBlue = {.h = 203, .s = 63.9, .v = 32.5};
         RGB aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
 
+
         const RGB ledsOff = {.r = 0, .g = 0, .b = 0};
 
         //HSV aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
+
         /*
         #define DARKORANGE 0xef9007
         #define LIGHTORANGE 0xf6d317
