@@ -121,12 +121,20 @@ RGB_MATRIX_EFFECT(no_anim)
                     }
 
                     RGB rgb = {
-                        .r = scale8(wave_rgb.r, A) + scale8(base_rgb.r, 0xFF - A),
-                        .g = scale8(wave_rgb.g, A) + scale8(base_rgb.g, 0xFF - A),
-                        .b = scale8(wave_rgb.b, A) + scale8(base_rgb.b, 0xFF - A),
+                        .r = scale8((scale8(wave_rgb.r, A) + scale8(base_rgb.r, 0xFF - A)),rgb_matrix_config.hsv.v),
+                        .g = scale8((scale8(wave_rgb.g, A) + scale8(base_rgb.g, 0xFF - A)), rgb_matrix_config.hsv.v),
+                        .b = scale8((scale8(wave_rgb.b, A) + scale8(base_rgb.b, 0xFF - A)), rgb_matrix_config.hsv.v),
                     };
 
+
+                    /*
+                    HSV scalee = rgb_matrix_rgb_to_hsv(rgb);
+                    scalee = scale8(hsv.v, rgb_matric_config.hsv.v);
+                    RGB rgb = rgb_matrix_hsv_to_rgb(scalee);
+                    */
+
                     rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
+
                 }
 
                 return rgb_matrix_check_finished_leds(led_max);
