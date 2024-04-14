@@ -20,22 +20,25 @@
 #define RGB_MATRIX_SLEEP
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #define RGB_MATRIX_KEYPRESSES
-#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_CUSTOM_aro_ace_splash
+//#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_CUSTOM_aro_ace_splash
 
+#define RGB_MATRIX_TYPING_HEATMAP_INCREASE_STEP 64
+#define RGB_MATRIX_TYPING_HEATMAP_DECREASE_DELAY_MS 50
+
+
+#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_TYPING_HEATMAP
 #define RGB_MATRIX_KEYREACTIVE_ENABLED
-#define ENABLE_RGB_MATRIX_SOLID_REACTIVE_SPLASH
 
 
 //split syncing functionality
 #define MASTER_LEFT
 #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_LED_STATE_ENABLE
-//#define SPLIT_TRANSPORT_MIRROR
 #define SPLIT_MODS_ENABLE
 
 
 #undef RGB_MATRIX_NONE
-#undef RGB_MATRIX_SOLID_COLOR    // Static single hue, no speed support
+#undef RGB_MATRIX_SOLID_COLOR  // Static single hue, no speed support
 #undef RGB_MATRIX_ALPHAS_MODS          // Static dual hue, speed is hue for secondary hue
 #undef RGB_MATRIX_GRADIENT_UP_DOWN     // Static gradient top to bottom, speed controls how much gradient changes
 #undef RGB_MATRIX_GRADIENT_LEFT_RIGHT     // Static gradient left to right, speed controls how much gradient changes
@@ -82,7 +85,11 @@
 #undef RGB_MATRIX_STARLIGHT_DUAL_SAT   // LEDs turn on and off at random at varying brightness, modifies user set saturation by +- 30
 #undef RGB_MATRIX_RIVERFLOW            // Modification to breathing animation, offset's animation depending on key location to simulate a river flowing
 #undef RGB_MATRIX_EFFECT_MAX
-#define RGB_MATRIX_ARO_ACE_SPLASH
+
+
+//#define ENABLE_RGB_MATRIX_ARO_ACE_SPLASH
+//#define RGB_MATRIX_ARO_ACE_SPLASH
+#define ENABLE_RGB_MATRIX_NO_ANIM
 #define RGB_MATRIX_NO_ANIM
 
 //disable effects
@@ -127,10 +134,8 @@
 #undef ENABLE_RGB_MATRIX_PIXEL_FLOW
 #undef ENABLE_RGB_MATRIX_PIXEL_RAIN
 
-#undef ENABLE_RGB_MATRIX_TYPING_HEATMAP
 #undef ENABLE_RGB_MATRIX_DIGITAL_RAIN
-
-//#undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
+#undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
 #undef ENABLE_RGB_MATRIX_SOLID_REACTIVE
 #undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
 #undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
