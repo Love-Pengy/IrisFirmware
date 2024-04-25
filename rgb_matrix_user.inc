@@ -1,56 +1,57 @@
+#ifdef ENABLE_RGB_MATRIX_NO_ANIM
+    RGB_MATRIX_EFFECT(no_anim)
+#endif
 
+#ifdef ENABLE_RGB_MATRIX_ARO_ACE_SPLASH
+    RGB_MATRIX_EFFECT(aro_ace_splash)
+#endif
 
-#ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
-    // ## default customizable values ##
-
-        #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
-
-        #ifdef ENABLE_RGB_MATRIX_NO_ANIM
-            RGB_MATRIX_EFFECT(no_anim)
-            static bool no_anim(effect_params_t* params) {
-                RGB_MATRIX_USE_LIMITS(led_min, led_max);
-                for (uint8_t i = led_min; i < led_max; i++) {
-                    rgb_matrix_set_color(i, RGB_OFF);
-                }
-                return rgb_matrix_check_finished_leds(led_max);
+#ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
+    #ifdef ENABLE_RGB_MATRIX_NO_ANIM
+        // ## default customizable values ##
+        RGB_MATRIX_EFFECT(no_anim)
+        static bool no_anim(effect_params_t* params) {
+            RGB_MATRIX_USE_LIMITS(led_min, led_max);
+            for (uint8_t i = led_min; i < led_max; i++) {
+                rgb_matrix_set_color(i, RGB_OFF);
             }
-        #endif
+            return rgb_matrix_check_finished_leds(led_max);
+        }
+    #endif
 
-        #ifdef ENABLE_ARO_ACE_SPLASH
-            #ifndef ENABLE_RGB_MATRIX_SOLID_REACTIVE_SPLASH
-                #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_SPLASH
-            #endif
+    #ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
+        #ifdef ENABLE_RGB_MATRIX_ARO_ACE_SPLASH
+
             // ## default customizable values ##
             #ifndef SOLID_REACTIVE_SPLASH_WAVE_WIDTH
                 #define SOLID_REACTIVE_SPLASH_WAVE_WIDTH 45  // ~8 keys wide (including fade/dropoff)
-            #endif
+                #endif
 
-            RGB_MATRIX_EFFECT(aro_ace_splash)
-            //original set
-            const RGB darkOrange = {.r = 239, .g = 144, .b = 7};
-            //const HSV darkOrange = {.h = 35, .s = 97.1, .v = 93.7};
-            const RGB lightOrange = {.r = 246, .g = 211, .b = 23};
-            //const HSV lightOrange = {.h = 51, .s = 90.7, .v = 96.5};
-            const RGB white = {.r = 255, .g = 255, .b = 255};
-            //const HSV white = {.h = 51, .s = 0, .v = 100};
-            const RGB lightBlue = {.r = 69, .g = 188, .b = 238};
-            //const HSV lightBlue = {.h = 198, .s = 71, .v = 93.3};
-            const RGB darkBlue = {.r = 30, .g = 63, .b = 83};
-            //const HSV darkBlue = {.h = 203, .s = 63.9, .v = 32.5};
-            RGB aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
+                //original set
+                const RGB darkOrange = {.r = 239, .g = 144, .b = 7};
+                //const HSV darkOrange = {.h = 35, .s = 97.1, .v = 93.7};
+                const RGB lightOrange = {.r = 246, .g = 211, .b = 23};
+                //const HSV lightOrange = {.h = 51, .s = 90.7, .v = 96.5};
+                const RGB white = {.r = 255, .g = 255, .b = 255};
+                //const HSV white = {.h = 51, .s = 0, .v = 100};
+                const RGB lightBlue = {.r = 69, .g = 188, .b = 238};
+                //const HSV lightBlue = {.h = 198, .s = 71, .v = 93.3};
+                const RGB darkBlue = {.r = 30, .g = 63, .b = 83};
+                //const HSV darkBlue = {.h = 203, .s = 63.9, .v = 32.5};
+                RGB aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
 
 
-            const RGB ledsOff = {.r = 0, .g = 0, .b = 0};
+                const RGB ledsOff = {.r = 0, .g = 0, .b = 0};
 
-            //HSV aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
+                //HSV aroaceFlag[5] = {darkOrange, lightOrange, white, lightBlue, darkBlue};
 
-            /*
-            #define DARKORANGE 0xef9007
-            #define LIGHTORANGE 0xf6d317
-            #define WHITE 0xffffff
-            #define lightBlue 0x45bcee
-            #define darkBlue 0x1e3f54
-            */
+                /*
+                #define DARKORANGE 0xef9007
+                #define LIGHTORANGE 0xf6d317
+                #define WHITE 0xffffff
+                #define lightBlue 0x45bcee
+                #define darkBlue 0x1e3f54
+                */
 
                 #define _MAX(a, b) ((a) > (b) ? (a) : (b))
                 #define _MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -118,10 +119,10 @@
 
                             if (inside_wave) {
                                 A = qadd8(A, qsub8(
-                                    0xFF, _CLAMP(
-                                        255 * offset / SOLID_REACTIVE_SPLASH_WAVE_WIDTH,
-                                        0, 0xFF
-                                    )
+                                        0xFF, _CLAMP(
+                                            255 * offset / SOLID_REACTIVE_SPLASH_WAVE_WIDTH,
+                                            0, 0xFF
+                                        )
                                 ));
                             }
                         }

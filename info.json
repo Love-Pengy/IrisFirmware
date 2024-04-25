@@ -158,7 +158,8 @@
             "solid_splash": false,
             "solid_multisplash": false,
             "aro_ace_splash": false,
-            "none": true
+            "no_anim": true,
+            "none": false
         },
         "driver": "ws2812",
         "split_count": [34, 34],
