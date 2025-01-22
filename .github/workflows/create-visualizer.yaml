@@ -1,0 +1,22 @@
+name: Visualizer Action
+on: [push]
+jobs:
+  Create-Visualizer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Deps
+        run: sudo apt install -y pipx python3-pip
+        run: pipx install keymap-drawer
+      - name: Setup QMK
+        run: python3 -m pip install --user qmk
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Generate JSON File
+        run: qmk c2json ./keymaps/Love-Pengy/keymap.c | keymap parse -c 12 -q - > iris_keymap_vis.yaml
+      - name: Generate Visualizer
+        run: keymap draw iris_keymap_vis.yaml > iris_keymap_vis.yaml
+        run: rm iris_keymap_vis.yaml
+      - name: Commit Visualizer
+        uses: EndBug/add-and-commit@v9
+
