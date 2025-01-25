@@ -28,8 +28,6 @@ jobs:
         run: |
             keymap draw iris_keymap_vis.yaml > iris_keymap_vis.svg
             rm iris_keymap_vis.yaml
-      - name: Show CWD
-        run: ls -l
       - name: Commit Visualizer
         run: |
           git pull
