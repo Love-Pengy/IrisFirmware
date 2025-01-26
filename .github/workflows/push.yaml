@@ -13,6 +13,8 @@ jobs:
   create-visualizer:
     name: Create Visualizer 👀
     needs: [build-firmware]
+    outputs:
+      genRelease: ${{ steps.commit.outputs.newContent }}
     uses: ./.github/workflows/create-visualizer.yaml
     secrets: inherit
     permissions:
@@ -20,9 +22,9 @@ jobs:
 
   create-release:
     name: Create Release 🛫
-    if: fromJSON(needs.create-visualizer.outputs.newContent)
     runs-on: ubuntu-latest
-    needs: [build-firmware, create-visualizer]
+    needs: [create-visualizer]
+    if: ${{needs.commit.outputs.genRelease}}
     steps:
       - name: Download Build Artifacts 📥
         uses: actions/download-artifact@v4
