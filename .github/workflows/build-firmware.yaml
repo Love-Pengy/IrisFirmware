@@ -29,4 +29,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: iris-firmware-Love-Pengy
-          path: /home/runner/qmk_firmware/keebio_iris_rev8_Love-Pengy_blok.uf2
+          path: /home/runner/qmk_firmware/keebio_iris_rev8_Love-Pengy.uf2
