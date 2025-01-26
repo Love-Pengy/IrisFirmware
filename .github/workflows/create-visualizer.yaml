@@ -46,9 +46,9 @@ jobs:
             git commit -m "Add Keymap Visualizer"
             git push
 
-            echo "newContent=yes" >> release_context
+            echo "yes" >> release_context
           else
-            echo "newContent=no" >> release_context
+            echo "no" >> release_context
           fi
         - name: Upload Context 📡
           uses: actions/upload-artifact@v4
