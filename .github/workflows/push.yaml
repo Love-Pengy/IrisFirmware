@@ -36,7 +36,8 @@ jobs:
         id: parse_context
         run: |
           ls -l release_context
-          if grep -q "yes" "./release_context/release_context"; then
+          cat release_context/release_context | grep yes
+          if $?; then
             echo "release=yes" >> $GITHUB_OUTPUT
           else
             echo "release=no" >> $GITHUB_OUTPUT
