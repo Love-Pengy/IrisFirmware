@@ -22,8 +22,18 @@ jobs:
     name: Create Release 🛫
     runs-on: ubuntu-latest
     needs: [create-visualizer]
-    if: ${{needs.commit.outputs.genRelease}}
+    defaults:
+      run:
+        shell: bash
     steps:
+      - name: Download Visualizer Artifact 📥
+        uses: actions/download-artifact@v4
+        with:
+          name:
+            visualizer_release_context
+
+      - name: Parse Context
+
       - name: Download Build Artifacts 📥
         uses: actions/download-artifact@v4
 
