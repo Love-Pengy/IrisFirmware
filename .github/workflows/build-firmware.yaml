@@ -1,0 +1,32 @@
+name: Build Firmware
+on:
+  workflow_call:
+# permissions:
+#   contents: write
+# env:
+#   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  Build-Firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Deps
+        run: |
+          sudo apt update
+          sudo apt upgrade -y
+          sudo apt install pipx python3-pip -y
+          pipx install keymap-drawer
+      - name: Setup QMK
+        run: |
+          python3 -m pip install --user qmk
+          qmk setup -y
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Overwrite All
+        run: cp -r ./* /home/runner/qmk_firmware/keyboards/keebio/iris/
+      - name: Build Lily
+        run: qmk compile -km Love-Pengy -kb keebio/iris/rev8
+      - name: Upload Artifacts 📡
+        uses: actions/upload-artifact@v4
+        with:
+          name: iris-firmware-Love-Pengy
+          path: /home/runner/qmk_firmware/keebio_iris_rev8_Love-Pengy_blok.uf2
