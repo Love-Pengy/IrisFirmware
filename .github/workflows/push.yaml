@@ -12,6 +12,7 @@ jobs:
 
   create-visualizer:
     name: Create Visualizer 👀
+    id: create-visualizer
     needs: [build-firmware]
     uses: ./.github/workflows/create-visualizer.yaml
     secrets: inherit
@@ -20,6 +21,7 @@ jobs:
 
   create-release:
     name: Create Release 🛫
+    if: fromJSON(steps.create-visualizer.outputs.newContent)
     runs-on: ubuntu-latest
     needs: [build-firmware, create-visualizer]
     steps:
