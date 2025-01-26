@@ -50,8 +50,8 @@ jobs:
           else
             echo "no" >> release_context
           fi
-        - name: Upload Context 📡
-          uses: actions/upload-artifact@v4
-          with:
-            name: visualizer_release_context
-            path: release_context
+      - name: Upload Context 📡
+        uses: actions/upload-artifact@v4
+        with:
+          name: visualizer_release_context
+          path: release_context
