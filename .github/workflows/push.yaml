@@ -35,8 +35,9 @@ jobs:
       - name: Parse Context
         id: parse_context
         run: |
-          ls -l release_context
-          cat ${{ github.workspace }}/release_context/release_context | grep yes
+          ls -l ./release_context
+          pwd
+          cat ./release_context/release_context | grep yes
           if $?; then
             echo "release=yes" >> $GITHUB_OUTPUT
           else
