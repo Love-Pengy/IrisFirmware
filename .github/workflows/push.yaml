@@ -13,8 +13,6 @@ jobs:
   create-visualizer:
     name: Create Visualizer 👀
     needs: [build-firmware]
-    outputs:
-      genRelease: ${{ steps.commit.outputs.newContent }}
     uses: ./.github/workflows/create-visualizer.yaml
     secrets: inherit
     permissions:

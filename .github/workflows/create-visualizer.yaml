@@ -8,6 +8,8 @@ env:
 jobs:
   Create-Visualizer:
     runs-on: ubuntu-latest
+    outputs:
+      genRelease: ${{ steps.commit.outputs.newContent }}
     defaults:
       run:
         shell: bash
