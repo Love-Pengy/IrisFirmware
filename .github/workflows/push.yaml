@@ -35,6 +35,7 @@ jobs:
       - name: Parse Context
         id: parse_context
         run: |
+          ls -l
           if grep -q "yes" "./visualizer_release_context/release_context"; then
             echo "release=yes" >> $GITHUB_OUTPUT
           else
