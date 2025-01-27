@@ -21,7 +21,6 @@ jobs:
         run: cp -r ./* /home/runner/qmk_firmware/keyboards/keebio/iris/
       - name: Build Lily
         run: qmk compile -km Love-Pengy -kb keebio/iris/rev8
-
       - name: Upload Artifacts 📡
         uses: actions/upload-artifact@v4
         with:
