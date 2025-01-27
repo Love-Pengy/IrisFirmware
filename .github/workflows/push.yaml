@@ -27,18 +27,16 @@ jobs:
         shell: bash
     steps:
       - name: Download & Parse Context 📥
-        id: parse_context
         uses: actions/download-artifact@v4
         with:
-          name:
-            visualizer_release_context
+          path: ${{ github.workspace }}
+          name: visualizer_release_context
+
+      - name: Parse Context
+        id: parse_context
         run: |
-          ls -l
-          echo "-------------------"
-          ls -l ./release_context
-          echo "-------------------"
+          ls -lR ${{ github.workspace }}
           pwd
-          echo "-------------------"
           cat ./release_context/release_context | grep yes
           if $?; then
             echo "release=yes" >> $GITHUB_OUTPUT
