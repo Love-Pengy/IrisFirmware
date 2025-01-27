@@ -1,15 +1,11 @@
 name: Visualizer Action
 on:
   workflow_call:
-# permissions:
-#   contents: write
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   Create-Visualizer:
     runs-on: ubuntu-latest
-    outputs:
-      genRelease: ${{ steps.commit.outputs.newContent }}
     defaults:
       run:
         shell: bash

@@ -1,10 +1,6 @@
 name: Build Firmware
 on:
   workflow_call:
-# permissions:
-#   contents: write
-# env:
-#   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   Build-Firmware:
     runs-on: ubuntu-latest
