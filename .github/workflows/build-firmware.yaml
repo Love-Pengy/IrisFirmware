@@ -22,9 +22,9 @@ jobs:
       - name: Build Lily
         run: qmk compile -km Love-Pengy -kb keebio/iris/rev8
 
-      # - name: Upload Artifacts 📡
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: iris-firmware-Love-Pengy
-      #     path: /home/runner/qmk_firmware/keebio_iris_rev8_Love-Pengy.uf2
+      - name: Upload Artifacts 📡
+        uses: actions/upload-artifact@v4
+        with:
+          name: iris-firmware-Love-Pengy
+          path: /home/runner/qmk_firmware/keebio_iris_rev8_Love-Pengy.uf2
 
