@@ -42,12 +42,12 @@ jobs:
             git commit -m "Add Keymap Visualizer"
             git push
 
-            echo "yes" >> release_context
+            # echo "yes" >> release_context
           else
-            echo "no" >> release_context
+            # echo "no" >> release_context
           fi
-      - name: Upload Context 📡
-        uses: actions/upload-artifact@v4
-        with:
-          name: visualizer_release_context
-          path: release_context
+      # - name: Upload Context 📡
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: visualizer_release_context
+      #     path: release_context

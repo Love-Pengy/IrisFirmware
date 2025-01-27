@@ -33,24 +33,24 @@ jobs:
           path: ${{ github.workspace }}
           name: visualizer_release_context
 
-      - name: Parse Context
-        id: parse_context
-        run: |
-          if cat ./release_context | grep yes; then
-            echo "release=yes" >> $GITHUB_OUTPUT
-            echo "got yes"
-          else
-            echo "release=no" >> $GITHUB_OUTPUT
-            echo "got no"
-          fi
+      # - name: Parse Context
+      #   id: parse_context
+      #   run: |
+      #     if cat ./release_context | grep yes; then
+      #       echo "release=yes" >> $GITHUB_OUTPUT
+      #       echo "got yes"
+      #     else
+      #       echo "release=no" >> $GITHUB_OUTPUT
+      #       echo "got no"
+      #     fi
 
 
       - name: Download Build Artifacts 📥
-        if: steps.parse_context.outputs.release == 'yes'
+        # if: steps.parse_context.outputs.release == 'yes'
         uses: actions/download-artifact@v4
 
       - name: Create Tag
-        if: steps.parse_context.outputs.release == 'yes'
+        # if: steps.parse_context.outputs.release == 'yes'
         id: release_tag
         uses: amitsingh-007/next-release-tag@v6.0.0
         with:
@@ -59,7 +59,7 @@ jobs:
           tag_template: 'yyyy.mm.dd.i'
 
       - name: Create Release 🛫
-        if: steps.parse_context.outputs.release == 'yes'
+        # if: steps.parse_context.outputs.release == 'yes'
         uses: softprops/action-gh-release@67b6c38432c171b8aa64dc6f3f152d12da2d99fa
         with:
           name: ${{ steps.release_tag.outputs.next_release_tag }}
