@@ -43,8 +43,8 @@ jobs:
             git push
 
             # echo "yes" >> release_context
-          else
-            # echo "no" >> release_context
+          # else
+          #   echo "no" >> release_context
           fi
       # - name: Upload Context 📡
       #   uses: actions/upload-artifact@v4
