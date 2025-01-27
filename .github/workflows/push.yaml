@@ -37,7 +37,7 @@ jobs:
         run: |
           ls -lR ${{ github.workspace }}
           pwd
-          cat ./release_context/release_context | grep yes
+          cat ./release_context | grep yes
           if $?; then
             echo "release=yes" >> $GITHUB_OUTPUT
           else
