@@ -1,8 +1,6 @@
 name: Visualizer Action
 on:
   workflow_call:
-# permissions:
-#   contents: write
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
@@ -33,6 +31,7 @@ jobs:
             keymap draw iris_keymap_vis.yaml > iris_keymap_vis.svg
             rm iris_keymap_vis.yaml
       - name: Commit Visualizer
+        id: commit
         run: |
           git pull
           git config user.name 'github-actions'
@@ -42,7 +41,13 @@ jobs:
             git add *.svg
             git commit -m "Add Keymap Visualizer"
             git push
-            echo "newContent=yes" >> $GITHUB_OUTPUT
-          else
-            echo "newContent=no" >> $GITHUB_OUTPUT
+
+            # echo "yes" >> release_context
+          # else
+          #   echo "no" >> release_context
           fi
+      # - name: Upload Context 📡
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: visualizer_release_context
+      #     path: release_context

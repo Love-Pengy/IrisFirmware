@@ -1,10 +1,6 @@
 name: Build Firmware
 on:
   workflow_call:
-# permissions:
-#   contents: write
-# env:
-#   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   Build-Firmware:
     runs-on: ubuntu-latest
@@ -30,3 +26,4 @@ jobs:
         with:
           name: iris-firmware-Love-Pengy
           path: /home/runner/qmk_firmware/keebio_iris_rev8_Love-Pengy.uf2
+
