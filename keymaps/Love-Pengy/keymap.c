@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
@@ -131,56 +130,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-// caps lock = pink 255 192 203
-// first layer = bmo teal 99,189,164
-// second layer = blue 173, 216, 230
-// third layer = white
 
-
+const uint8_t matrix_colors[5][3] = {
+    {0, 0, 0},               /* DEFAULT/QWERTY */
+    {49, 255, 49},           /* LOWER */
+    {173 / 2, 216 / 2, 255}, /* RAISE */
+    {246, 190, 0},           /* ADJUST */
+    {255, 192 / 2, 203 / 2}, /* CAPS */
+};
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+
+    bool     caps_lock  = host_keyboard_led_state().caps_lock;
+    uint8_t  curr_layer = 0;
+    uint8_t *rgb;
+
     for (uint8_t i = led_min; i < led_max; i++) {
         if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
-            switch(get_highest_layer(layer_state|default_layer_state)) {
-                case _QWERTY:
-                    if(host_keyboard_led_state().caps_lock){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, (192/2), (203/2));
-                        break;
-                    }
-                    RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
-                    break;
-                case _LOWER:
-                    if(host_keyboard_led_state().caps_lock){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, (192/2), (203/2));
-                        break;
-                    }
-                    RGB_MATRIX_INDICATOR_SET_COLOR(i, 49, 255, 49);
-                    break;
-                case _RAISE:
-                    if(host_keyboard_led_state().caps_lock){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, (192/2), (203/2));
-                        break;
-                    }
-                    RGB_MATRIX_INDICATOR_SET_COLOR(i, (int)(173/2), (int)(216/2), 255);
-                    break;
-                case _ADJUST:
-                    if(host_keyboard_led_state().caps_lock){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, (192/2), (203/2));
-                        break;
-                    }
-                    RGB_MATRIX_INDICATOR_SET_COLOR(i, 246, 190, 0);
-                    break;
-                default:
-                    if(host_keyboard_led_state().caps_lock){
-                        RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, (192/2), (203/2));
-                        break;
-                    }
-                    RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
-                    break;
-         }
-
-            }
+            curr_layer = caps_lock ? (sizeof(matrix_colors) / sizeof(matrix_colors[0])) - 1 : get_highest_layer(layer_state | default_layer_state);
+            rgb        = (uint8_t*) matrix_colors[curr_layer];
+            RGB_MATRIX_INDICATOR_SET_COLOR(i, *rgb, *(rgb + 1), *(rgb + 2));
         }
+    }
+
     return false;
 }
-
